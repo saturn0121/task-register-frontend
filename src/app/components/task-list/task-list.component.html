@@ -9,9 +9,12 @@
   <p *ngIf="errorMessage" class="text-red-600 mb-4">{{ errorMessage }}</p>
 
   <ul class="divide-y">
-    <li *ngFor="let task of tasks" class="py-2 flex justify-between">
+    <li *ngFor="let task of tasks" class="py-2 flex justify-between items-center">
       <span>{{ task.title }}</span>
-      <span class="text-sm text-gray-500">{{ task.status }}</span>
+      <span class="flex items-center gap-3">
+        <span class="text-sm text-gray-500">{{ task.status }}</span>
+        <a [routerLink]="['/edit', task.id]" class="text-blue-600 text-sm">Edit</a>
+      </span>
     </li>
   </ul>
 </div>
