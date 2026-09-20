@@ -1,30 +1,39 @@
   import { Component, OnInit } from '@angular/core';
   import { CommonModule } from '@angular/common';
   import { RouterLink } from '@angular/router';
+  import { FormsModule } from '@angular/forms';
   import { TaskService, Task } from '../../services/task.service';
 
   @Component({
     selector: 'app-task-list',
-    imports: [CommonModule, RouterLink],
+    imports: [CommonModule, RouterLink, FormsModule],
     templateUrl: './task-list.component.html',
     styleUrl: './task-list.component.css'
   })
-  
-export class TaskListComponent implements OnInit {
-  tasks: Task[] = [];
-  errorMessage = '';
+  export class TaskListComponent implements OnInit {
+    tasks: Task[] = [];
+    errorMessage = '';
 
-  constructor(private taskService: TaskService) {}
+    search = '';
+    status = '';
 
-  ngOnInit(): void {
-    this.taskService.getTasks().subscribe({
-      next: (data) => {
-        this.tasks = data;
-      },
-      error: (err) => {
-        console.error('Failed to load tasks', err);
-        this.errorMessage = 'Could not load tasks. Is the API running?';
-      }
-    });
+    constructor(private taskService: TaskService) {}
+
+    ngOnInit(): void {
+      this.loadTasks();
+    }
+
+    loadTasks(): void {
+      this.errorMessage = '';
+
+      this.taskService.getTasks(this.search, this.status).subscribe({
+        next: (data) => {
+          this.tasks = data;
+        },
+        error: (err) => {
+          console.error('Failed to load tasks', err);
+          this.errorMessage = 'Could not load tasks. Is the API running?';
+        }
+      });
+    }
   }
-}

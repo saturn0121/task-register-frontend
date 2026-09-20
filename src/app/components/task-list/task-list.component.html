@@ -6,6 +6,24 @@
       New Task
   </a>
 
+  <form (ngSubmit)="loadTasks()" class="flex flex-col sm:flex-row gap-2 mb-4">
+    <input type="text" name="search" [(ngModel)]="search"
+           placeholder="Search title..."
+           class="border rounded px-3 py-2 flex-1">
+
+    <select name="status" [(ngModel)]="status"
+            class="border rounded px-3 py-2">
+      <option value="">All statuses</option>
+      <option value="open">Open</option>
+      <option value="in_progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+
+    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded">
+      Filter
+    </button>
+  </form>
+
   <p *ngIf="errorMessage" class="text-red-600 mb-4">{{ errorMessage }}</p>
 
   <ul class="divide-y">
