@@ -31,7 +31,28 @@
       <span>{{ task.title }}</span>
       <span class="flex items-center gap-3">
         <span class="text-sm text-gray-500">{{ task.status }}</span>
-        <a [routerLink]="['/edit', task.id]" class="text-blue-600 text-sm">Edit</a>
+
+        <ng-container *ngIf="confirmingId !== task.id">
+          <a [routerLink]="['/edit', task.id]" class="text-blue-600 text-sm">Edit</a>
+          <button type="button" (click)="askDelete(task.id)"
+                  class="text-red-600 text-sm">
+            Delete
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="confirmingId === task.id">
+          <span class="text-sm">Delete this task?</span>
+          <button type="button" (click)="confirmDelete(task.id)"
+                  [disabled]="deletingId === task.id"
+                  class="bg-red-600 text-white text-sm px-2 py-1 rounded disabled:opacity-50">
+            {{ deletingId === task.id ? 'Deleting...' : 'Yes, delete' }}
+          </button>
+          <button type="button" (click)="cancelDelete()"
+                  [disabled]="deletingId === task.id"
+                  class="text-gray-600 text-sm">
+            Cancel
+          </button>
+        </ng-container>
       </span>
     </li>
   </ul>

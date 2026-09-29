@@ -40,4 +40,8 @@ export class TaskService {
   updateTask(id: number, task: Omit<Task, 'id'>): Observable<Task> {
     return this.http.put<Task>(`${this.apiUrl}/${id}`, task);
   }
+
+  deleteTask(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 }

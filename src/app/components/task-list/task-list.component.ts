@@ -17,6 +17,9 @@
     search = '';
     status = '';
 
+    confirmingId: number | null = null;
+    deletingId: number | null = null;
+
     constructor(private taskService: TaskService) {}
 
     ngOnInit(): void {
@@ -36,4 +39,38 @@
         }
       });
     }
+
+    askDelete(id: number): void {
+      this.confirmingId = id;
+    }
+
+    cancelDelete(): void {
+      this.confirmingId = null;
+    }
+
+    confirmDelete(id: number): void {
+      this.errorMessage = '';
+      this.deletingId = id;
+
+      this.taskService.deleteTask(id).subscribe({
+        next: () => {
+          this.tasks = this.tasks.filter(t => t.id !== id);
+          this.confirmingId = null;
+          this.deletingId = null;
+        },
+        error: (err) => {
+          console.error('Failed to delete task', err);
+          this.deletingId = null;
+          this.confirmingId = null;
+
+          if (err.status === 404) {
+            this.loadTasks();
+            this.errorMessage = 'That task no longer exists. The list has been refreshed.';
+          } else {
+            this.errorMessage = 'Could not delete the task. Is the API running?';
+          }
+        }
+      });
+    }
+      
   }
