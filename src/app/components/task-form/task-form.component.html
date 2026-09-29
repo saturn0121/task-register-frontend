@@ -1,0 +1,36 @@
+<form (ngSubmit)="onSubmit()" class="space-y-4">
+  <div>
+    <label class="block mb-1">Title</label>
+    <input type="text" name="title" [(ngModel)]="task.title"
+           class="w-full border rounded px-3 py-2">
+    <p *ngIf="fieldErrors['title']" class="text-red-600 text-sm">
+      {{ fieldErrors['title'][0] }}
+    </p>
+  </div>
+
+  <div>
+    <label class="block mb-1">Description</label>
+    <textarea name="description" [(ngModel)]="task.description"
+              class="w-full border rounded px-3 py-2"></textarea>
+  </div>
+
+  <div>
+    <label class="block mb-1">Status</label>
+    <select name="status" [(ngModel)]="task.status"
+            class="w-full border rounded px-3 py-2">
+      <option value="open">Open</option>
+      <option value="in_progress">In Progress</option>
+      <option value="done">Done</option>
+    </select>
+  </div>
+
+  <div>
+    <label class="block mb-1">Due Date</label>
+    <input type="date" name="due_date" [(ngModel)]="task.due_date"
+           class="w-full border rounded px-3 py-2">
+  </div>
+
+  <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">
+    {{ submitLabel }}
+  </button>
+</form>
