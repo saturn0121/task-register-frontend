@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto mt-8">
+<div class="max-w-3xl mx-auto mt-8 px-4">
   <h1 class="text-2xl font-bold mb-4">Tasks</h1>
 
   <a routerLink="/create"
@@ -27,15 +27,15 @@
   <p *ngIf="errorMessage" class="text-red-600 mb-4">{{ errorMessage }}</p>
 
   <ul class="divide-y">
-    <li *ngFor="let task of tasks" class="py-2 flex justify-between items-center">
+    <li *ngFor="let task of tasks" class="py-2 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
       <span>{{ task.title }}</span>
-      <span class="flex items-center gap-3">
+      <span class="flex flex-wrap items-center gap-3">
         <span class="text-sm text-gray-500">{{ task.status }}</span>
 
         <ng-container *ngIf="confirmingId !== task.id">
-          <a [routerLink]="['/edit', task.id]" class="text-blue-600 text-sm">Edit</a>
+          <a [routerLink]="['/edit', task.id]" class="text-blue-600 text-sm py-1">Edit</a>
           <button type="button" (click)="askDelete(task.id)"
-                  class="text-red-600 text-sm">
+                  class="text-red-600 text-sm py-1">
             Delete
           </button>
         </ng-container>
