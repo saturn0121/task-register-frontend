@@ -1,0 +1,21 @@
+<div class="max-w-sm mx-auto mt-16 px-4">
+  <h1 class="text-2xl font-bold mb-4">Sign in</h1>
+
+  <p class="bg-yellow-100 text-yellow-800 text-sm rounded px-3 py-2 mb-4">
+    Demo login only. There's no password or real authentication yet.
+    Real login and roles come in Week 4.
+  </p>
+
+  <form (ngSubmit)="onSubmit()" class="space-y-4">
+    <div>
+      <label class="block mb-1">Your name</label>
+      <input type="text" name="name" [(ngModel)]="name"
+             class="w-full border rounded px-3 py-2">
+      <p *ngIf="errorMessage" class="text-red-600 text-sm">{{ errorMessage }}</p>
+    </div>
+
+    <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded">
+      Sign in
+    </button>
+  </form>
+</div>
