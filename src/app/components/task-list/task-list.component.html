@@ -34,7 +34,7 @@
 
         <ng-container *ngIf="confirmingId !== task.id">
           <a [routerLink]="['/edit', task.id]" class="text-blue-600 text-sm py-1">Edit</a>
-          <button type="button" (click)="askDelete(task.id)"
+          <button *ngIf="authService.isAdmin()" type="button" (click)="askDelete(task.id)"
                   class="text-red-600 text-sm py-1">
             Delete
           </button>

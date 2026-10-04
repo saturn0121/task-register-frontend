@@ -3,6 +3,7 @@
   import { RouterLink } from '@angular/router';
   import { FormsModule } from '@angular/forms';
   import { TaskService, Task } from '../../services/task.service';
+  import { AuthService } from '../../services/auth.service';
 
   @Component({
     selector: 'app-task-list',
@@ -20,7 +21,7 @@
     confirmingId: number | null = null;
     deletingId: number | null = null;
 
-    constructor(private taskService: TaskService) {}
+    constructor(private taskService: TaskService, public authService: AuthService) {}
 
     ngOnInit(): void {
       this.loadTasks();
@@ -66,6 +67,8 @@
           if (err.status === 404) {
             this.loadTasks();
             this.errorMessage = 'That task no longer exists. The list has been refreshed.';
+          } else if (err.status === 403) {
+            this.errorMessage = 'You do not have permission to delete tasks.';
           } else {
             this.errorMessage = 'Could not delete the task. Is the API running?';
           }

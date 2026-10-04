@@ -6,6 +6,7 @@ export interface User {
   id: number;
   name: string;
   email: string;
+  role: 'admin' | 'staff';
 }
 
 interface LoginResponse {
@@ -52,6 +53,10 @@ export class AuthService {
   currentUser(): User | null {
     const stored = localStorage.getItem(this.userKey);
     return stored ? JSON.parse(stored) : null;
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser()?.role === 'admin';
   }
 
   isLoggedIn(): boolean {
