@@ -1,21 +1,33 @@
 <div class="max-w-sm mx-auto mt-16 px-4">
   <h1 class="text-2xl font-bold mb-4">Sign in</h1>
 
-  <p class="bg-yellow-100 text-yellow-800 text-sm rounded px-3 py-2 mb-4">
-    Demo login only. There's no password or real authentication yet.
-    Real login and roles come in Week 4.
+  <p *ngIf="errorMessage"
+     class="bg-red-100 text-red-700 text-sm rounded px-3 py-2 mb-4">
+    {{ errorMessage }}
   </p>
 
   <form (ngSubmit)="onSubmit()" class="space-y-4">
     <div>
-      <label class="block mb-1">Your name</label>
-      <input type="text" name="name" [(ngModel)]="name"
+      <label class="block mb-1">Email</label>
+      <input type="email" name="email" [(ngModel)]="email"
              class="w-full border rounded px-3 py-2">
-      <p *ngIf="errorMessage" class="text-red-600 text-sm">{{ errorMessage }}</p>
+      <p *ngIf="fieldErrors['email']" class="text-red-600 text-sm">
+        {{ fieldErrors['email'][0] }}
+      </p>
     </div>
 
-    <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded">
-      Sign in
+    <div>
+      <label class="block mb-1">Password</label>
+      <input type="password" name="password" [(ngModel)]="password"
+             class="w-full border rounded px-3 py-2">
+      <p *ngIf="fieldErrors['password']" class="text-red-600 text-sm">
+        {{ fieldErrors['password'][0] }}
+      </p>
+    </div>
+
+    <button type="submit" [disabled]="submitting"
+            class="w-full bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50">
+      {{ submitting ? 'Signing in...' : 'Sign in' }}
     </button>
   </form>
 </div>

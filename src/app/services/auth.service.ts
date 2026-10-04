@@ -1,26 +1,60 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, tap, finalize } from 'rxjs';
 
-// SIMULATED LOGIN ONLY - not real authentication.
-// No password, no API call. Replaced with Laravel auth in Week 4.
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface LoginResponse {
+  token: string;
+  user: User;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private storageKey = 'demoUser';
+  private apiUrl = 'http://localhost:8000/api';
+  private tokenKey = 'authToken';
+  private userKey = 'authUser';
 
-  login(name: string): void {
-    localStorage.setItem(this.storageKey, name);
+  constructor(private http: HttpClient) {}
+
+  login(email: string, password: string): Observable<LoginResponse> {
+    return this.http
+      .post<LoginResponse>(`${this.apiUrl}/login`, { email, password })
+      .pipe(
+        tap(response => {
+          localStorage.setItem(this.tokenKey, response.token);
+          localStorage.setItem(this.userKey, JSON.stringify(response.user));
+        })
+      );
   }
 
-  logout(): void {
-    localStorage.removeItem(this.storageKey);
+  logout(): Observable<void> {
+    return this.http
+      .post<void>(`${this.apiUrl}/logout`, {})
+      .pipe(finalize(() => this.clearSession()));
   }
 
-  currentUser(): string | null {
-    return localStorage.getItem(this.storageKey);
+  clearSession(): void {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.userKey);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  currentUser(): User | null {
+    const stored = localStorage.getItem(this.userKey);
+    return stored ? JSON.parse(stored) : null;
   }
 
   isLoggedIn(): boolean {
-    return this.currentUser() !== null;
+    return this.getToken() !== null;
   }
 }
