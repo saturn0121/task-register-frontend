@@ -1,4 +1,4 @@
-<div class="max-w-3xl mx-auto mt-8 px-4">
+<div class="max-w-3xl mx-auto mt-8 px-4 pb-12">
   <h1 class="text-2xl font-bold mb-4">Tasks</h1>
 
   <a routerLink="/create"
@@ -6,10 +6,10 @@
       New Task
   </a>
 
-  <form (ngSubmit)="loadTasks()" class="flex flex-col sm:flex-row gap-2 mb-4">
+  <form (ngSubmit)="loadTasks()" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
     <input type="text" name="search" [(ngModel)]="search"
            placeholder="Search title..."
-           class="border rounded px-3 py-2 flex-1">
+           class="border rounded px-3 py-2 sm:col-span-2">
 
     <select name="status" [(ngModel)]="status"
             class="border rounded px-3 py-2">
@@ -19,17 +19,59 @@
       <option value="done">Done</option>
     </select>
 
-    <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded">
-      Filter
-    </button>
+    <select name="priority" [(ngModel)]="priority"
+            class="border rounded px-3 py-2">
+      <option value="">All priorities</option>
+      <option value="high">High</option>
+      <option value="medium">Medium</option>
+      <option value="low">Low</option>
+    </select>
+
+    <select name="assignedTo" [(ngModel)]="assignedTo"
+            class="border rounded px-3 py-2">
+      <option value="">All owners</option>
+      <option value="none">Unassigned</option>
+      <option *ngFor="let user of users" [value]="user.id">{{ user.name }}</option>
+    </select>
+
+    <label class="flex items-center gap-2 px-1 py-2">
+      <input type="checkbox" name="overdueOnly" [(ngModel)]="overdueOnly">
+      <span class="text-sm">Overdue only</span>
+    </label>
+
+    <div class="flex gap-2 sm:col-span-2">
+      <button type="submit" class="bg-gray-700 text-white px-4 py-2 rounded">
+        Filter
+      </button>
+      <button *ngIf="hasFilters" type="button" (click)="clearFilters()"
+              class="border px-4 py-2 rounded text-gray-700">
+        Clear
+      </button>
+    </div>
   </form>
 
   <p *ngIf="errorMessage" class="text-red-600 mb-4">{{ errorMessage }}</p>
+  <p *ngIf="loading" class="text-gray-500 text-sm mb-4">Loading...</p>
+  <p *ngIf="!loading && !errorMessage && tasks.length === 0" class="text-gray-500 mb-4">
+    No tasks match.
+  </p>
 
   <ul class="divide-y">
-    <li *ngFor="let task of tasks" class="py-2 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1">
-      <span>{{ task.title }}</span>
+    <li *ngFor="let task of tasks" class="py-3 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+      <div>
+        <span class="font-medium">{{ task.title }}</span>
+        <div class="text-xs text-gray-500 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>{{ task.assignee ? task.assignee.name : 'Unassigned' }}</span>
+          <span *ngIf="task.due_date" [class.text-red-600]="isOverdue(task)" [class.font-semibold]="isOverdue(task)">
+            Due {{ task.due_date }}<span *ngIf="isOverdue(task)"> (overdue)</span>
+          </span>
+        </div>
+      </div>
+
       <span class="flex flex-wrap items-center gap-3">
+        <span class="text-xs px-2 py-0.5 rounded-full" [ngClass]="priorityClass(task.priority)">
+          {{ task.priority }}
+        </span>
         <span class="text-sm text-gray-500">{{ task.status }}</span>
 
         <ng-container *ngIf="confirmingId !== task.id">

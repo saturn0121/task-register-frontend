@@ -1,14 +1,19 @@
 <header *ngIf="authService.isLoggedIn()"
         class="border-b">
-  <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
+  <div class="max-w-3xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+    <nav class="flex gap-4 text-sm">
+      <a routerLink="/" routerLinkActive="font-bold text-blue-600"
+         [routerLinkActiveOptions]="{ exact: true }">Tasks</a>
+      <a routerLink="/dashboard" routerLinkActive="font-bold text-blue-600">Dashboard</a>
+    </nav>
     <span class="text-sm text-gray-600">
       Signed in as <strong>{{ authService.currentUser()?.name }}</strong>
       ({{ authService.currentUser()?.role }})
+      <button type="button" (click)="logout()"
+              class="text-sm text-red-600 ml-3">
+        Logout
+      </button>
     </span>
-    <button type="button" (click)="logout()"
-            class="text-sm text-red-600">
-      Logout
-    </button>
   </div>
 </header>
 

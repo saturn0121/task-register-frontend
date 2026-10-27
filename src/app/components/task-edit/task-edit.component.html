@@ -1,4 +1,4 @@
-<div class="max-w-md mx-auto mt-8 px-4">
+<div class="max-w-md mx-auto mt-8 px-4 pb-12">
   <h1 class="text-2xl font-bold mb-4">Edit Task</h1>
 
   <p *ngIf="errorMessage" class="text-red-600 mb-4">{{ errorMessage }}</p>
@@ -6,8 +6,11 @@
   <app-task-form
     *ngIf="task"
     [task]="task"
+    [users]="users"
     [fieldErrors]="fieldErrors"
     submitLabel="Save Changes"
     (save)="onSave($event)">
   </app-task-form>
+
+  <app-task-comments *ngIf="task" [taskId]="id"></app-task-comments>
 </div>

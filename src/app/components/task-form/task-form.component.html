@@ -1,10 +1,11 @@
-<form (ngSubmit)="onSubmit()" class="space-y-4">
+<form (ngSubmit)="onSubmit()" class="space-y-4" novalidate>
   <div>
     <label class="block mb-1">Title</label>
-    <input type="text" name="title" [(ngModel)]="task.title"
-           class="w-full border rounded px-3 py-2">
-    <p *ngIf="fieldErrors['title']" class="text-red-600 text-sm">
-      {{ fieldErrors['title'][0] }}
+    <input type="text" name="title" [(ngModel)]="task.title" (ngModelChange)="onChange()"
+           class="w-full border rounded px-3 py-2"
+           [class.border-red-500]="errorFor('title')">
+    <p *ngIf="errorFor('title')" class="text-red-600 text-sm">
+      {{ errorFor('title') }}
     </p>
   </div>
 
@@ -12,22 +13,53 @@
     <label class="block mb-1">Description</label>
     <textarea name="description" [(ngModel)]="task.description"
               class="w-full border rounded px-3 py-2"></textarea>
+    <p *ngIf="errorFor('description')" class="text-red-600 text-sm">
+      {{ errorFor('description') }}
+    </p>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label class="block mb-1">Status</label>
+      <select name="status" [(ngModel)]="task.status"
+              class="w-full border rounded px-3 py-2">
+        <option value="open">Open</option>
+        <option value="in_progress">In Progress</option>
+        <option value="done">Done</option>
+      </select>
+      <p *ngIf="errorFor('status')" class="text-red-600 text-sm">{{ errorFor('status') }}</p>
+    </div>
+
+    <div>
+      <label class="block mb-1">Priority</label>
+      <select name="priority" [(ngModel)]="task.priority"
+              class="w-full border rounded px-3 py-2">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <p *ngIf="errorFor('priority')" class="text-red-600 text-sm">{{ errorFor('priority') }}</p>
+    </div>
   </div>
 
   <div>
-    <label class="block mb-1">Status</label>
-    <select name="status" [(ngModel)]="task.status"
+    <label class="block mb-1">Assigned to</label>
+    <select name="assigned_to" [(ngModel)]="task.assigned_to"
             class="w-full border rounded px-3 py-2">
-      <option value="open">Open</option>
-      <option value="in_progress">In Progress</option>
-      <option value="done">Done</option>
+      <option [ngValue]="null">Unassigned</option>
+      <option *ngFor="let user of users" [ngValue]="user.id">{{ user.name }}</option>
     </select>
+    <p *ngIf="errorFor('assigned_to')" class="text-red-600 text-sm">{{ errorFor('assigned_to') }}</p>
   </div>
 
   <div>
     <label class="block mb-1">Due Date</label>
-    <input type="date" name="due_date" [(ngModel)]="task.due_date"
-           class="w-full border rounded px-3 py-2">
+    <input type="date" name="due_date" [(ngModel)]="task.due_date" (ngModelChange)="onChange()"
+           class="w-full border rounded px-3 py-2"
+           [class.border-red-500]="errorFor('due_date')">
+    <p *ngIf="errorFor('due_date')" class="text-red-600 text-sm">
+      {{ errorFor('due_date') }}
+    </p>
   </div>
 
   <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">

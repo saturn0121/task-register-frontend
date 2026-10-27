@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TaskService, Task } from '../../services/task.service';
+import { TaskService, TaskPayload, Assignee } from '../../services/task.service';
 import { TaskFormComponent } from '../task-form/task-form.component';
 
 @Component({
@@ -10,20 +10,30 @@ import { TaskFormComponent } from '../task-form/task-form.component';
   templateUrl: './task-create.component.html',
   styleUrl: './task-create.component.css'
 })
-export class TaskCreateComponent {
-  task: Omit<Task, 'id'> = {
+export class TaskCreateComponent implements OnInit {
+  task: TaskPayload = {
     title: '',
     description: '',
     status: 'open',
+    priority: 'medium',
+    assigned_to: null,
     due_date: ''
   };
 
+  users: Assignee[] = [];
   errorMessage = '';
   fieldErrors: { [key: string]: string[] } = {};
 
   constructor(private taskService: TaskService, private router: Router) {}
 
-  onSave(data: Omit<Task, 'id'>): void {
+  ngOnInit(): void {
+    this.taskService.getUsers().subscribe({
+      next: (users) => (this.users = users),
+      error: () => (this.errorMessage = 'Could not load the user list for assigning.')
+    });
+  }
+
+  onSave(data: TaskPayload): void {
     this.errorMessage = '';
     this.fieldErrors = {};
 

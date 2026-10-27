@@ -1,0 +1,36 @@
+<section class="mt-10 border-t pt-6">
+  <h2 class="text-lg font-bold mb-3">Notes</h2>
+
+  <p *ngIf="errorMessage" class="text-red-600 text-sm mb-3">{{ errorMessage }}</p>
+
+  <p *ngIf="comments.length === 0 && !errorMessage" class="text-sm text-gray-500 mb-3">
+    No notes yet.
+  </p>
+
+  <ul class="space-y-3 mb-4">
+    <li *ngFor="let comment of comments" class="bg-gray-50 border rounded px-3 py-2">
+      <div class="flex justify-between items-start gap-2">
+        <p class="text-xs text-gray-500">
+          <strong>{{ comment.author.name }}</strong>
+          &middot; {{ comment.created_at | date:'MMM d, y, h:mm a' }}
+        </p>
+        <button *ngIf="canDelete(comment)" type="button" (click)="remove(comment)"
+                class="text-red-600 text-xs">
+          Delete
+        </button>
+      </div>
+      <p class="text-sm mt-1 whitespace-pre-line break-words">{{ comment.body }}</p>
+    </li>
+  </ul>
+
+  <form (ngSubmit)="add()" class="space-y-2" novalidate>
+    <textarea name="body" [(ngModel)]="body" rows="3" placeholder="Add a note..."
+              class="w-full border rounded px-3 py-2"
+              [class.border-red-500]="bodyError"></textarea>
+    <p *ngIf="bodyError" class="text-red-600 text-sm">{{ bodyError }}</p>
+    <button type="submit" [disabled]="posting"
+            class="bg-gray-700 text-white px-4 py-2 rounded disabled:opacity-50">
+      {{ posting ? 'Posting...' : 'Add note' }}
+    </button>
+  </form>
+</section>

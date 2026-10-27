@@ -23,6 +23,21 @@ export class LoginComponent {
   onSubmit(): void {
     this.errorMessage = '';
     this.fieldErrors = {};
+
+    // Client-side checks first; the server still re-validates.
+    const email = this.email.trim();
+    if (!email) {
+      this.fieldErrors['email'] = ['Email is required.'];
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      this.fieldErrors['email'] = ['Enter a valid email address.'];
+    }
+    if (!this.password) {
+      this.fieldErrors['password'] = ['Password is required.'];
+    }
+    if (Object.keys(this.fieldErrors).length > 0) {
+      return;
+    }
+
     this.submitting = true;
 
     this.authService.login(this.email.trim(), this.password).subscribe({
